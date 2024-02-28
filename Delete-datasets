@@ -1,0 +1,19 @@
+#Conectar-se ao serviço Power BI
+Connect-PowerBIServiceAccount
+
+#Obter o id do workspace
+$Workspace = Get-PowerBIWorkspace -Name 'Workspace Name'
+$WorkspaceId = $Workspace.Id
+
+#Obter todos os datasets (modelo semântico) do workspace
+$dataset = Get-PowerBIDataset -WorkspaceId $WorkspaceId
+
+#Loop para excluir cada datasets:
+Foreach ($i in $dataset) {
+    $datasetId = $i.Id
+    Invoke-PowerBIRestMethod -Url "https://api.powerbi.com/v1.0/myorg/datasets/$datasetId" -Method Delete
+    Write-Output "Modelo semântico excluído: $datasetId"    
+    }
+
+#Desconectar-se do serviço Power BI
+Disconnect-PowerBIServiceAccount
